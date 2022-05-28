@@ -39,13 +39,8 @@ public class DestructionCatalyst extends Item {
     }
 
     @Override
-    public boolean isDamageable(ItemStack stack) {
-        return true;
-    }
-
-    @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(new TranslatableComponent("tooltip.caitsmod.DestructionCatalyst.tooltip"));
+        pTooltipComponents.add(new TranslatableComponent("tooltip.33miner.DestructionCatalyst.tooltip"));
     }
 
     @Override
@@ -119,12 +114,15 @@ public class DestructionCatalyst extends Item {
         if(!context.getPlayer().isShiftKeyDown()){
             world.playSound(context.getPlayer(), context.getClickedPos(), SoundEventsInit.DESTRUCTION_CATALYST_USE.get(), SoundSource.BLOCKS, 1.0F, 1);
         }
+
         if(!world.isClientSide){
             //if player is not crouching, super break!
             if(!context.getPlayer().isShiftKeyDown()){
                 superBreaker(context, stack.getTag().getInt("charge"));
             }
         }
+
+
         return super.onItemUseFirst(stack, context);
     }
 
@@ -138,6 +136,8 @@ public class DestructionCatalyst extends Item {
         int[] iterateWidthHeight = {-1, 0, 1};
         Direction clickedFace = context.getClickedFace();
         List<ItemStack> drops = new LinkedList<>();
+
+
 
         for (int width : iterateWidthHeight) {
             for (int height : iterateWidthHeight) {
@@ -195,18 +195,8 @@ public class DestructionCatalyst extends Item {
         Level world = context.getLevel();
         BlockState newClickedBlock = world.getBlockState(bopo);
         Player player = context.getPlayer();
-        ItemStack stack = context.getItemInHand();
-
-
-
-
         if(blockValidToBreak(bopo, context, world)){
             world.destroyBlock(bopo, false);
-
-            stack.hurtAndBreak(1, player, (player1) -> {
-                player1.broadcastBreakEvent(EquipmentSlot.MAINHAND);
-            });
-
             return Block.getDrops(newClickedBlock, (ServerLevel) world, bopo, world.getBlockEntity(bopo), context.getPlayer(), context.getItemInHand() );
         }
 

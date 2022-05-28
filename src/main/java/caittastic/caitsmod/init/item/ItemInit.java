@@ -21,7 +21,7 @@ public class ItemInit {
     }
 
     public static final RegistryObject<Item> DESTRUCTION_CATALYST = ITEMS.register("destruction_catalyst",
-            () -> new DestructionCatalyst(new Item.Properties().tab(TabInit.CURIOSITIES_TAB).stacksTo(1).durability(300)));
+            () -> new DestructionCatalyst(new Item.Properties().tab(TabInit.CURIOSITIES_TAB).stacksTo(1)));
 
 
 
