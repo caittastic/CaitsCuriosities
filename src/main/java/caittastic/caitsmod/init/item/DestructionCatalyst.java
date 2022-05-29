@@ -2,8 +2,6 @@ package caittastic.caitsmod.init.item;
 
 import caittastic.caitsmod.init.SoundEventsInit;
 import net.minecraft.Util;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -12,15 +10,16 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,6 +32,12 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+//catalyst creates ghost blocks on breaking, client thinks blocks are broken but server doesnt
+//spawn protection is fricked up
+
+
+
+
 public class DestructionCatalyst extends Item {
     public DestructionCatalyst(Properties properties) {
         super(properties);
@@ -40,7 +45,7 @@ public class DestructionCatalyst extends Item {
 
     @Override
     public void appendHoverText(ItemStack pStack, @Nullable Level pLevel, List<Component> pTooltipComponents, TooltipFlag pIsAdvanced) {
-        pTooltipComponents.add(new TranslatableComponent("tooltip.33miner.DestructionCatalyst.tooltip"));
+        pTooltipComponents.add(new TranslatableComponent("tooltip.caitsmod.DestructionCatalyst.tooltip"));
     }
 
     @Override
@@ -48,126 +53,121 @@ public class DestructionCatalyst extends Item {
         //variables!
         ItemStack stack = player.getItemInHand(pUsedHand);
         BlockPos pos = player.blockPosition();
-        CompoundTag tag = new CompoundTag();
         boolean shiftKeyDown = player.isShiftKeyDown();
-
-        //if the world is clientside,  and the player is crouching, charge the item
-        if(!world.isClientSide){
-            if(!stack.hasTag()){
-                tag.putInt("charge", 1);
-                stack.setTag(tag);
-            }
-
-            if(shiftKeyDown){
-
-                switch (stack.getTag().getInt("charge")){
-                    case 1 :
-                        stack.getTag().putInt("charge", 4);
-                        player.sendMessage(new TextComponent("Charge: "+stack.getTag().getInt("charge")), Util.NIL_UUID);
-                        break;
-                    case 4 :
-                        stack.getTag().putInt("charge", 9);
-                        player.sendMessage(new TextComponent("Charge: "+stack.getTag().getInt("charge")), Util.NIL_UUID);
-                        break;
-                    case 9 :
-                        stack.getTag().putInt("charge", 16);
-                        player.sendMessage(new TextComponent("Charge: "+stack.getTag().getInt("charge")), Util.NIL_UUID);
-                        break;
-                    case 16 :
-                        stack.getTag().putInt("charge", 1);
-                        player.sendMessage(new TextComponent("Charge: "+stack.getTag().getInt("charge")), Util.NIL_UUID);
-                        break;
-                }
-            }
-        }
-
-        //if the player is crouching, play the charge noise
-        if (shiftKeyDown){
-            switch (stack.getTag().getInt("charge")) {
-                case 1:
+        Boolean isServerSide = !world.isClientSide;
+        //if world is server side, and item does not have tag, give it a tag
+        //if the player is crouching, check the charge value
+        //on the server, cycle the charge value updwards, and print the charge in chat
+        //on server and client, play the charging sound effect
+        if(shiftKeyDown){
+            switch (getCharge(stack)){
+                case 1 :
+                    if(isServerSide){
+                        setCharge(stack, 4);
+                        player.sendMessage(new TextComponent("Charge: "+ getCharge(stack)), Util.NIL_UUID);
+                    }
                     world.playSound(player, pos, SoundEventsInit.ITEM_CHARGE.get(), SoundSource.PLAYERS, 0.25F, 1);
-                case 4:
+                    break;
+                case 4 :
+                    if(isServerSide){
+                        setCharge(stack, 9);
+                        player.sendMessage(new TextComponent("Charge: "+ getCharge(stack)), Util.NIL_UUID);
+                    }
                     world.playSound(player, pos, SoundEventsInit.ITEM_CHARGE.get(), SoundSource.PLAYERS, 0.25F, 1.125f);
-                case 9:
+                    break;
+                case 9 :
+                    if(isServerSide){
+                        setCharge(stack, 16);
+                        player.sendMessage(new TextComponent("Charge: " + getCharge(stack)), Util.NIL_UUID);
+                    }
                     world.playSound(player, pos, SoundEventsInit.ITEM_CHARGE.get(), SoundSource.PLAYERS, 0.25F, 1.25f);
-                case 16:
+                    break;
+                case 16 :
+                    if(isServerSide){
+                        setCharge(stack, 1);
+                        player.sendMessage(new TextComponent("Charge: " + getCharge(stack)), Util.NIL_UUID);
+                    }
                     world.playSound(player, pos, SoundEventsInit.ITEM_CHARGE.get(), SoundSource.PLAYERS, 0.25F, 1.375f);
+                    break;
             }
         }
-
-
-
-
-
-
-
         return super.use(world, player, pUsedHand);
     }
+
+
+
+
+
 
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         //variables
         Level world = context.getLevel();
         context.getPlayer().getDirection();
-
-        //plays the breaking sound if can try breaking
+        //if the player is not crouching
+        //preform the super break on the server side
+        //play the breaking sound effect on client and server
         if(!context.getPlayer().isShiftKeyDown()){
+            if(!world.isClientSide){
+                superBreaker(context, getCharge(stack));
+            }
             world.playSound(context.getPlayer(), context.getClickedPos(), SoundEventsInit.DESTRUCTION_CATALYST_USE.get(), SoundSource.BLOCKS, 1.0F, 1);
         }
-
-        if(!world.isClientSide){
-            //if player is not crouching, super break!
-            if(!context.getPlayer().isShiftKeyDown()){
-                superBreaker(context, stack.getTag().getInt("charge"));
-            }
-        }
-
-
         return super.onItemUseFirst(stack, context);
     }
 
     //  helpful :)
-    //checks if a block should be breakable based on vanilla rules
+    private int getCharge(ItemStack stack) { //gets the value of charge tag
+        ensureCharge(stack); //ennsures that the charge tag exists
+        return stack.getTag().getInt("charge"); //returns the value set in the charge tag
+    }
+
+    private void setCharge(ItemStack stack, int value){ //changes the value in the charge tag
+        ensureCharge(stack); //ensures that the charge tag exists
+        stack.getTag().putInt("charge", value); //sets the value 'value' into the charge tag
+    }
+
+    private void ensureCharge(ItemStack stack){ //ensures that the charge tag exists
+        if(!stack.hasTag()){ //does the not stack have any tag
+            stack.setTag(new CompoundTag()); //make a new tag
+        }
+        assert stack.getTag() != null;
+        if(!stack.getTag().contains("charge")){
+            stack.getTag().putInt("charge", 1); //put the int 1 with the key "charge" into the tag
+            stack.setTag(stack.getTag()); //puts the tag onto the item
+        }
+    }
 
     private void superBreaker(UseOnContext context, int charge) {
+        //variables
         Level world = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         BlockPos newBlockPos;
         int[] iterateWidthHeight = {-1, 0, 1};
         Direction clickedFace = context.getClickedFace();
         List<ItemStack> drops = new LinkedList<>();
-
-
-
+        //goes through a 3 x 3 x charge depth loop
         for (int width : iterateWidthHeight) {
             for (int height : iterateWidthHeight) {
                 for (int depth = 0; depth <= (charge - 1); depth++) {
-                    newBlockPos = offsetBlock(blockPos, clickedFace, width, height, depth);
-                    BlockState newClickedBlock = world.getBlockState(newBlockPos);
-                    drops.addAll(breakAndAddLoTooList(newBlockPos, context));
-
+                    newBlockPos = offsetBlock(blockPos, clickedFace, width, height, depth); //finds a block to break
+                    drops.addAll(breakAndAddLoTooList(newBlockPos, context)); // breaks the block at the location and adds them to a list of loot
                 }
             }
         }
-        compressStacksAndGiveToPlayer(drops, world, blockPos);
+        compressStacksAndGiveToPlayer(drops, world, blockPos); //gives the list of loot to the player
     }
 
     private BlockPos offsetBlock(BlockPos blockToOffset, Direction clickedDirection, int width, int height, int depth) {
         int negativeDepth = depth * -1;
         BlockPos newBlockPos = blockToOffset;
         switch (clickedDirection) {
-            case SOUTH:
-                newBlockPos = blockToOffset.offset(width, height, negativeDepth);break;
-            case NORTH:
-                newBlockPos = blockToOffset.offset(width, height, depth);break;
-            case EAST:
-                newBlockPos = blockToOffset.offset(negativeDepth, width, height);break;
-            case WEST:
-                newBlockPos = blockToOffset.offset(depth, width, height);break;
-            case UP:
-                newBlockPos = blockToOffset.offset(width, negativeDepth, height);break;
-            case DOWN:
-                newBlockPos = blockToOffset.offset(width, depth, height);break;
+            case SOUTH: newBlockPos = blockToOffset.offset(width, height, negativeDepth);break;
+            case NORTH: newBlockPos = blockToOffset.offset(width, height, depth);break;
+            case EAST: newBlockPos = blockToOffset.offset(negativeDepth, width, height);break;
+            case WEST: newBlockPos = blockToOffset.offset(depth, width, height);break;
+            case UP: newBlockPos = blockToOffset.offset(width, negativeDepth, height);break;
+            case DOWN: newBlockPos = blockToOffset.offset(width, depth, height);break;
         }
         return newBlockPos;
     }
@@ -175,11 +175,11 @@ public class DestructionCatalyst extends Item {
     private boolean blockValidToBreak(BlockPos clickedBlockPos, UseOnContext context, Level world) {
         ServerPlayer player = (ServerPlayer)context.getPlayer();
         BlockState clickedBlock = world.getBlockState(clickedBlockPos);
-
-        return clickedBlock.getDestroySpeed(world, context.getClickedPos()) > 0f &&
-                clickedBlock.getDestroySpeed(world, context.getClickedPos()) <= 50 &&
-                isBlockSpawnProtected(context.getPlayer(),context.getClickedPos())&&
-                ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, clickedBlockPos) != -1;
+        boolean b = clickedBlock.getDestroySpeed(world, context.getClickedPos()) > 0f;
+        boolean b1 = clickedBlock.getDestroySpeed(world, context.getClickedPos()) <= 50;
+        boolean b2 = !isBlockSpawnProtected(context.getPlayer(), context.getClickedPos());
+        boolean b3 = ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, clickedBlockPos) != -1;
+        return b && b1 && b2 && b3;
     }
 
     //i took this code basically exactly from dshadowwolfs bit
@@ -194,12 +194,10 @@ public class DestructionCatalyst extends Item {
         List<ItemStack> drops = new LinkedList<>();
         Level world = context.getLevel();
         BlockState newClickedBlock = world.getBlockState(bopo);
-        Player player = context.getPlayer();
         if(blockValidToBreak(bopo, context, world)){
             world.destroyBlock(bopo, false);
             return Block.getDrops(newClickedBlock, (ServerLevel) world, bopo, world.getBlockEntity(bopo), context.getPlayer(), context.getItemInHand() );
         }
-
         return drops;
     }
 
@@ -216,17 +214,13 @@ public class DestructionCatalyst extends Item {
                 }
             }
         }
-
         drops.removeIf(ItemStack::isEmpty);
-
         int itemCreateX = bloPo.getX();
         int itemCreateY = bloPo.getY();
         int itemCreateZ = bloPo.getZ();
-
         for (ItemStack item : drops) {
             world.addFreshEntity(new ItemEntity(world,itemCreateX,itemCreateY,itemCreateZ, item));
         }
-
     }
 }
 
