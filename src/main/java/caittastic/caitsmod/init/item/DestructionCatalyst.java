@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -32,15 +33,15 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-//catalyst creates ghost blocks on breaking, client thinks blocks are broken but server doesnt
-//spawn protection is fricked up
-
-
-
-
+//block valid to break check is fricked up
 public class DestructionCatalyst extends Item {
     public DestructionCatalyst(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public boolean isDamageable(ItemStack stack) {
+        return true;
     }
 
     @Override
@@ -93,12 +94,6 @@ public class DestructionCatalyst extends Item {
         }
         return super.use(world, player, pUsedHand);
     }
-
-
-
-
-
-
     @Override
     public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
         //variables
@@ -109,7 +104,8 @@ public class DestructionCatalyst extends Item {
         //play the breaking sound effect on client and server
         if(!context.getPlayer().isShiftKeyDown()){
             if(!world.isClientSide){
-                superBreaker(context, getCharge(stack));
+                superBreaker(context, getCharge(stack), stack);
+
             }
             world.playSound(context.getPlayer(), context.getClickedPos(), SoundEventsInit.DESTRUCTION_CATALYST_USE.get(), SoundSource.BLOCKS, 1.0F, 1);
         }
@@ -138,7 +134,7 @@ public class DestructionCatalyst extends Item {
         }
     }
 
-    private void superBreaker(UseOnContext context, int charge) {
+    private void superBreaker(UseOnContext context, int charge, ItemStack stack) {
         //variables
         Level world = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
@@ -147,14 +143,23 @@ public class DestructionCatalyst extends Item {
         Direction clickedFace = context.getClickedFace();
         List<ItemStack> drops = new LinkedList<>();
         //goes through a 3 x 3 x charge depth loop
-        for (int width : iterateWidthHeight) {
-            for (int height : iterateWidthHeight) {
-                for (int depth = 0; depth <= (charge - 1); depth++) {
+        for (int depth = 0; depth <= (charge - 1); depth++) {
+            for (int width : iterateWidthHeight) {
+                for (int height : iterateWidthHeight) {
+
                     newBlockPos = offsetBlock(blockPos, clickedFace, width, height, depth); //finds a block to break
-                    drops.addAll(breakAndAddLoTooList(newBlockPos, context)); // breaks the block at the location and adds them to a list of loot
+                    drops.addAll(breakAndAddLoTooList(newBlockPos, context, stack)); // breaks the block at the location and adds them to a list of loot
+
+
                 }
+
             }
+            stack.hurtAndBreak(1, context.getPlayer(), (player) -> {
+                player.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+            });
         }
+
+
         compressStacksAndGiveToPlayer(drops, world, blockPos); //gives the list of loot to the player
     }
 
@@ -177,26 +182,31 @@ public class DestructionCatalyst extends Item {
         BlockState clickedBlock = world.getBlockState(clickedBlockPos);
         boolean b = clickedBlock.getDestroySpeed(world, context.getClickedPos()) > 0f;
         boolean b1 = clickedBlock.getDestroySpeed(world, context.getClickedPos()) <= 50;
-        boolean b2 = !isBlockSpawnProtected(context.getPlayer(), context.getClickedPos());
-        boolean b3 = ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, clickedBlockPos) != -1;
-        return b && b1 && b2 && b3;
+        return b && b1;
     }
 
-    //i took this code basically exactly from dshadowwolfs bit
-    private boolean isBlockSpawnProtected(Player player, BlockPos pos) {
+
+    private boolean isUnknownBreakableCheck(BlockPos clickedBlockPos, ServerPlayer player) {
+        return ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, clickedBlockPos) != -1;
+    }
+
+    private boolean isBlockProtected(Player player, BlockPos pos) {
         if (ServerLifecycleHooks.getCurrentServer().isUnderSpawnProtection((ServerLevel) player.getCommandSenderWorld(), pos, player)) {
-            return false;
+            return true;
         }
         return Arrays.stream(Direction.values()).allMatch(e -> player.mayUseItemAt(pos, e, ItemStack.EMPTY));
     }
 
-    private List<ItemStack> breakAndAddLoTooList( BlockPos bopo, UseOnContext context){
+    private List<ItemStack> breakAndAddLoTooList(BlockPos bopo, UseOnContext context, ItemStack stack){
         List<ItemStack> drops = new LinkedList<>();
         Level world = context.getLevel();
         BlockState newClickedBlock = world.getBlockState(bopo);
+
         if(blockValidToBreak(bopo, context, world)){
             world.destroyBlock(bopo, false);
-            return Block.getDrops(newClickedBlock, (ServerLevel) world, bopo, world.getBlockEntity(bopo), context.getPlayer(), context.getItemInHand() );
+            List<ItemStack> dropList = Block.getDrops(newClickedBlock, (ServerLevel) world, bopo, world.getBlockEntity(bopo), context.getPlayer(), context.getItemInHand());
+
+            return dropList;
         }
         return drops;
     }

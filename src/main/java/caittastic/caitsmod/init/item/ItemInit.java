@@ -14,7 +14,7 @@ public class ItemInit {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MOD_ID);
 
     public static final RegistryObject<Item> DESTRUCTION_CATALYST = ITEMS.register("destruction_catalyst",
-            () -> new DestructionCatalyst(new Item.Properties().tab(TabInit.CURIOSITIES_TAB).stacksTo(1)));
+            () -> new DestructionCatalyst(new Item.Properties().tab(TabInit.CURIOSITIES_TAB).durability(1000)));
 
     //function that registers items
     private static <T extends Item> RegistryObject<T> register(final String name, final Supplier<T> item) {
