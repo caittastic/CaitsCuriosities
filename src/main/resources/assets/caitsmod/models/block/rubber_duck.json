@@ -1,5 +1,5 @@
 {
-	"credit": "Made with Blockbench",
+	"parent": "minecraft:block/block",
 	"texture_size": [32, 32],
 	"textures": {
 		"1": "caitsmod:block/rubber_duck"
@@ -78,34 +78,6 @@
 			}
 		}
 	],
-	"display": {
-		"thirdperson_righthand": {
-			"translation": [0, 8, 2]
-		},
-		"thirdperson_lefthand": {
-			"translation": [0, 8, 2]
-		},
-		"firstperson_righthand": {
-			"rotation": [0, 110, 0],
-			"translation": [0, 6, -1]
-		},
-		"firstperson_lefthand": {
-			"rotation": [0, 110, 0],
-			"translation": [0, 6, -1]
-		},
-		"ground": {
-			"translation": [0, 4.5, 0]
-		},
-		"gui": {
-			"rotation": [22.5, 135, 0],
-			"translation": [0, 9.5, 0],
-			"scale": [2, 2, 2]
-		},
-		"head": {
-			"translation": [0, 18.5, 0],
-			"scale": [1.5, 1.5, 1.5]
-		}
-	},
 	"groups": [
 		{
 			"name": "VoxelShapes",
