@@ -12,5 +12,12 @@
     "sounds": [
       "caitsmod:item_charge"
     ]
+  },
+  "item_tune": {
+    "category": "items",
+    "subtitle": "caitsmod.item_tune",
+    "sounds": [
+      "caitsmod:item_tune"
+    ]
   }
 }

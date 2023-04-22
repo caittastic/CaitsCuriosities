@@ -1,10 +1,18 @@
 package caittastic.caitsmod;
 
-import caittastic.caitsmod.init.ModRegistries;
+import caittastic.caitsmod.Block.ModBlocks;
+import caittastic.caitsmod.BlockEntity.ModBlockEntities;
+import caittastic.caitsmod.Item.ModItemProperties;
+import caittastic.caitsmod.Item.ModItems;
+import caittastic.caitsmod.particles.ModParticles;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.jetbrains.annotations.NotNull;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(CaitsMod.MOD_ID)
@@ -16,13 +24,26 @@ public class CaitsMod{
     //registers items
     IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-    ModRegistries.ITEMS.register(bus);
-    ModRegistries.BLOCKS.register(bus);
-    ModRegistries.BLOCK_ENTITIES.register(bus);
-    ModRegistries.SOUND_EVENTS.register(bus);
+    ModItems.ITEMS.register(bus);
+    ModBlocks.BLOCKS.register(bus);
+    ModBlockEntities.BLOCK_ENTITIES.register(bus);
+    ModSoundEvents.SOUND_EVENTS.register(bus);
+    ModParticles.PARTICLE_TYPES.register(bus);
 
-    // Register ourselves for server and other game events we are interested in
     MinecraftForge.EVENT_BUS.register(this);
+
+    bus.addListener(this::clientSetup);
+  }
+
+  /* -------------------------------- registering tabs -------------------------------- */
+  public static final CreativeModeTab CURIOSITIES_TAB = new CreativeModeTab("curiosities_tab"){
+    @Override
+    public @NotNull
+    ItemStack makeIcon(){return new ItemStack(ModBlocks.RUBBER_DUCK.get());}
+  };
+
+  private void clientSetup(final FMLClientSetupEvent event){
+    ModItemProperties.addCustomItemProperties();
   }
 
 }
