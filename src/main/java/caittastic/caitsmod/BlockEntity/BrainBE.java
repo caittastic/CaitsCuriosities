@@ -11,8 +11,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -52,7 +50,8 @@ public class BrainBE extends BlockEntity{
 
       /* remove empty nodes from the node list, and build the pull and push node lists */
       //iterate for each node position
-      for(BlockPos nodePos: e.nodePositions){
+      for(int i = 0; i < e.nodePositions.size(); i++){
+        BlockPos nodePos = e.nodePositions.get(i);
         //if a position isnt a node, remove it. else add it to its matching list
         BlockState nodeState = level.getBlockState(nodePos);
         if(!nodeState.is(ModBlocks.NODE.get())){

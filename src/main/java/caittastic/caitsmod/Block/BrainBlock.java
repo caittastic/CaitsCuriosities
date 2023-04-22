@@ -37,18 +37,15 @@ public class BrainBlock extends BaseEntityBlock{
 
   @Override
   public InteractionResult use(BlockState pState, Level level, BlockPos pos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit){
-    System.out.println("-------------- brain use --------------");
     if(pPlayer.getItemInHand(pHand).isEmpty()){
       if(level.getBlockEntity(pos) instanceof BrainBE entity){
         if(level.isClientSide()){
           pPlayer.playSound(SoundEvents.BONE_BLOCK_PLACE, 0.5f, 0.5f);
-          pPlayer.playSound(SoundEvents.ZOMBIE_AMBIENT, 0.5f, 1.5f);
+          pPlayer.playSound(SoundEvents.ZOMBIE_AMBIENT, 0.5f, 1.5f + level.random.nextFloat());
         } else{
           for(int i = 0; i < entity.getNodePositions().size(); i++){
             this.targetPositions.add((BlockPos)entity.getNodePositions().get(i));
-            System.out.println("loop: " + (BlockPos)entity.getNodePositions().get(i) + level.isClientSide());
           }
-          System.out.println("block: " + entity.getNodePositions() + level.isClientSide());
         }
 
         return InteractionResult.SUCCESS;
@@ -79,11 +76,14 @@ public class BrainBlock extends BaseEntityBlock{
             (pRandom.nextDouble() - 0.5D) * 0.5D);
 
     //node locator beam
+    ourX = ourPos.getX() + 0.5f;
+    ourY = ourPos.getY() + 0.5f;
+    ourZ = ourPos.getZ() + 0.5f;
+    double speed = 0.2d;
+
     if(!targetPositions.isEmpty()){
       for(int i = 0; i < targetPositions.size(); i++){
-
         BlockPos targetPos = targetPositions.get(i);
-        double speed = 0.2d;
 
         double xDif = ourX - (targetPos.getX() + 0.5d);
         double yDif = ourY - (targetPos.getY() + 0.5d);
@@ -126,6 +126,6 @@ public class BrainBlock extends BaseEntityBlock{
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState pState, BlockEntityType<T> pBlockEntityType){
 
-      return createTickerHelper(pBlockEntityType, ModBlockEntities.BRAIN.get(), BrainBE::tick);
+    return createTickerHelper(pBlockEntityType, ModBlockEntities.BRAIN.get(), BrainBE::tick);
   }
 }
