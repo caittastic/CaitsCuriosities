@@ -20,9 +20,6 @@ import static caittastic.caitsmod.CaitsMod.MOD_ID;
 public class ModBlocks{
   public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MOD_ID);
 
-  public static final RegistryObject<Block> HUPWARDSER =
-          registerBlockWithItem("hupwardser", () ->
-                  new HupwardserBlock(BlockBehaviour.Properties.of(Material.STONE).noOcclusion()), CaitsMod.CURIOSITIES_TAB);
   public static final RegistryObject<Block> RUBBER_DUCK =
           registerBlockWithItem("rubber_duck", () ->
                   new RubberDuckBlock(BlockBehaviour.Properties.of(Material.WOOL).strength(0.1f)), CaitsMod.CURIOSITIES_TAB);

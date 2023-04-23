@@ -3,6 +3,7 @@ package caittastic.caitsmod.Item;
 import caittastic.caitsmod.CaitsMod;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
@@ -61,5 +62,10 @@ public class ModItems{
   public static final RegistryObject<Item> TUNING_WAND =
           ITEMS.register("tuning_wand", () ->
                   new ResonatingWandItem(new Item.Properties().tab(CaitsMod.CURIOSITIES_TAB).stacksTo(1)));
+  public static final RegistryObject<Item> ROTTEN_BRAIN =
+          ITEMS.register("rotten_brain", () ->
+                  new Item(new Item.Properties().tab(CaitsMod.CURIOSITIES_TAB)));
+
+
 
 }

@@ -11,14 +11,14 @@ import static caittastic.caitsmod.CaitsMod.MOD_ID;
 public class ModBlockEntities{
   public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, MOD_ID);
 
-  public static final RegistryObject<BlockEntityType<HupwardserBE>> HUPWARDSER_BLOCK_ENTITY =
-          BLOCK_ENTITIES.register("hupwardser_block_entity", () ->
-                  BlockEntityType.Builder.of(HupwardserBE::new,
-                          ModBlocks.HUPWARDSER.get()).build(null));
-
   public static final RegistryObject<BlockEntityType<BrainBE>> BRAIN =
           BLOCK_ENTITIES.register("brain_block_entity", () ->
                   BlockEntityType.Builder.of(BrainBE::new,
                           ModBlocks.BRAIN_JAR.get()).build(null));
+
+  public static final RegistryObject<BlockEntityType<NodeBE>> NODE =
+          BLOCK_ENTITIES.register("node_block_entity", () ->
+                  BlockEntityType.Builder.of(NodeBE::new,
+                          ModBlocks.NODE.get()).build(null));
 
 }

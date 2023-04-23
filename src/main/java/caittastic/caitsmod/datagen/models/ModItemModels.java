@@ -19,15 +19,15 @@ public class ModItemModels extends ItemModelProvider{
 
   @Override
   protected void registerModels(){
-
     registerWithExistingParent(ModBlocks.RUBBER_DUCK);
-    registerWithExistingParent(ModBlocks.HUPWARDSER);
     registerWithExistingParent(ModBlocks.NODE);
     registerWithExistingParent(ModBlocks.BRAIN_JAR);
 
     registerFlatItemModel(ModItems.TUNING_WAND);
+    registerFlatItemModel(ModItems.ROTTEN_BRAIN);
 
     registerFlatItemModel(ModItems.OVERWORLD_PACK);
+
     for(int i = 1; i <= ModItems.overworldCards.length; i++){
       RegistryObject<Item> item = ModItems.OVERWORLD_MAP.get(i);
       ResourceLocation back = new ResourceLocation(CaitsMod.MOD_ID,

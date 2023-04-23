@@ -8,7 +8,6 @@ import net.minecraftforge.registries.RegistryObject;
 public class ModBlockLootTables extends BlockLoot{
   @Override
   protected void addTables(){
-    simpleDropSelf(ModBlocks.HUPWARDSER);
     simpleDropSelf(ModBlocks.RUBBER_DUCK);
   }
 

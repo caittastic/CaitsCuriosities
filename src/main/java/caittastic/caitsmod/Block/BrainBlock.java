@@ -2,9 +2,13 @@ package caittastic.caitsmod.Block;
 
 import caittastic.caitsmod.BlockEntity.BrainBE;
 import caittastic.caitsmod.BlockEntity.ModBlockEntities;
+import caittastic.caitsmod.BlockEntity.NodeBE;
+import caittastic.caitsmod.networking.BrainRemoveSyncS2CPacket;
+import caittastic.caitsmod.networking.ModPackets;
 import caittastic.caitsmod.particles.ModParticles;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
@@ -36,22 +40,32 @@ public class BrainBlock extends BaseEntityBlock{
   }
 
   @Override
-  public InteractionResult use(BlockState pState, Level level, BlockPos pos, Player pPlayer, InteractionHand pHand, BlockHitResult pHit){
-    if(pPlayer.getItemInHand(pHand).isEmpty()){
+  public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean pIsMoving){
+    if(level.getBlockEntity(pos) instanceof BrainBE brainBE){
+      for(BlockPos nodPos: brainBE.getNodePositions())
+        if(level.getBlockEntity(nodPos) instanceof NodeBE nodeBE){
+          nodeBE.removeBrain();
+          ModPackets.sendToClients(new BrainRemoveSyncS2CPacket(nodPos));
+        }
+    }
+    super.onRemove(state, level, pos, newState, pIsMoving);
+  }
+
+  @Override
+  public InteractionResult use(BlockState pState, Level level, BlockPos pos, Player player, InteractionHand pHand, BlockHitResult pHit){
+    if(player.getItemInHand(pHand).isEmpty()){
       if(level.getBlockEntity(pos) instanceof BrainBE entity){
         if(level.isClientSide()){
-          pPlayer.playSound(SoundEvents.BONE_BLOCK_PLACE, 0.5f, 0.5f);
-          pPlayer.playSound(SoundEvents.ZOMBIE_AMBIENT, 0.5f, 1.5f + level.random.nextFloat());
+          player.playSound(SoundEvents.BONE_BLOCK_PLACE, 0.5f, 0.5f);
+          player.playSound(SoundEvents.ZOMBIE_AMBIENT, 0.5f, 1.5f + level.random.nextFloat());
         } else{
-          for(int i = 0; i < entity.getNodePositions().size(); i++){
-            this.targetPositions.add((BlockPos)entity.getNodePositions().get(i));
-          }
+          this.targetPositions.addAll(entity.getNodePositions());
+          player.sendSystemMessage(Component.literal("" + entity.getNodePositions()));
         }
-
         return InteractionResult.SUCCESS;
       }
     }
-    return super.use(pState, level, pos, pPlayer, pHand, pHit);
+    return super.use(pState, level, pos, player, pHand, pHit);
   }
 
   @Override
@@ -125,7 +139,6 @@ public class BrainBlock extends BaseEntityBlock{
   @Nullable
   @Override
   public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState pState, BlockEntityType<T> pBlockEntityType){
-
     return createTickerHelper(pBlockEntityType, ModBlockEntities.BRAIN.get(), BrainBE::tick);
   }
 }

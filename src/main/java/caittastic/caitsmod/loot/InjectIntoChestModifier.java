@@ -30,7 +30,7 @@ public class InjectIntoChestModifier extends LootModifier{
 
   @Override
   protected @NotNull ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext context){
-    if(context.getRandom().nextFloat() >= 0.5f)
+    //if(context.getRandom().nextFloat() >= 0.5f)
       generatedLoot.add(new ItemStack(this.item, 1));
     return generatedLoot;
   }

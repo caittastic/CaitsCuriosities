@@ -1,5 +1,11 @@
-// 1.19.2	2023-04-18T18:43:29.8627614	Recipes
+// 1.19.2	2023-04-23T02:09:02.2392333	Recipes
+45aa538cfbb75d82eede3b9d617cdf45f6d87631 data/caitsmod/advancements/recipes/curiosities_tab/brain_jar.json
 bd8fbfb922238f71bde2259a4dc55f64841396d6 data/caitsmod/advancements/recipes/curiosities_tab/destruction_catalyst.json
+7d39b56adbbeaf03987a4fa58ee7389fff645f7b data/caitsmod/advancements/recipes/curiosities_tab/node.json
 d79de6b760b6ae72859ffd2ac5a37205f77947bf data/caitsmod/advancements/recipes/curiosities_tab/rubber_duck.json
+b4693a944983ebe4b08022acf0fc550f9c27df7a data/caitsmod/advancements/recipes/curiosities_tab/tuning_wand.json
+443258016e29a854ed8552c618de0a6eb4674227 data/caitsmod/recipes/brain_jar.json
 238f5ac2f13c096f0488e5782e84902883f7f8db data/caitsmod/recipes/destruction_catalyst.json
+27e0d8382750732a1acba044a3e71e1974ac2af8 data/caitsmod/recipes/node.json
 ed4db935758f950c96e0afebc774a500bab7f4a1 data/caitsmod/recipes/rubber_duck.json
+d1b63c18db3f8ff1def2cd6e15f756129c0333f5 data/caitsmod/recipes/tuning_wand.json

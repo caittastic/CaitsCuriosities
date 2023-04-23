@@ -19,5 +19,12 @@
     "sounds": [
       "caitsmod:item_tune"
     ]
+  },
+  "poof": {
+    "category": "items",
+    "subtitle": "caitsmod.poof",
+    "sounds": [
+      "caitsmod:poof"
+    ]
   }
 }

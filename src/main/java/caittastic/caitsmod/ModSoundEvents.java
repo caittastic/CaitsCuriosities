@@ -13,6 +13,7 @@ public class ModSoundEvents{
   public static final RegistryObject<SoundEvent> ITEM_USE = registerSoundEvent("destruction_catalyst_use");
   public static final RegistryObject<SoundEvent> ITEM_CHARGE = registerSoundEvent("item_charge");
   public static final RegistryObject<SoundEvent> ITEM_TUNE = registerSoundEvent("item_tune");
+  public static final RegistryObject<SoundEvent> POOF = registerSoundEvent("poof");
 
   private static RegistryObject<SoundEvent> registerSoundEvent(String name){
     return SOUND_EVENTS.register(name, () -> new SoundEvent(new ResourceLocation(MOD_ID, name)));

@@ -17,7 +17,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.parchmentmc.librarian.forgegradle'
 
-version = '0.2.1-1.19.2'
+version = '0.3.1-1.19.2'
 group = 'caittastic.caitsmod' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'caitsmod'
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)

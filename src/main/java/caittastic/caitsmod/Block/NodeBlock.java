@@ -1,7 +1,9 @@
 package caittastic.caitsmod.Block;
 
+import caittastic.caitsmod.BlockEntity.NodeBE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -10,7 +12,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
@@ -21,7 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class NodeBlock extends Block{
+public class NodeBlock extends BaseEntityBlock{
   public static final DirectionProperty ATTACHED_FACE = DirectionProperty.create("attached_face");
   public static final EnumProperty<NodeType> TYPE = EnumProperty.create("type", NodeType.class);
 
@@ -37,10 +42,6 @@ public class NodeBlock extends Block{
     this.registerDefaultState(this.stateDefinition.any()
             .setValue(ATTACHED_FACE, Direction.DOWN)
             .setValue(TYPE, NodeType.PULL));
-  }
-
-  public static Direction getDirFromNode(Level level, BlockPos blockPos){
-    return level.getBlockState(blockPos).getValue(ATTACHED_FACE);
   }
 
   @Override
@@ -87,4 +88,21 @@ public class NodeBlock extends Block{
   protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder){
     pBuilder.add(ATTACHED_FACE, TYPE);
   }
+
+  @Override
+  public RenderShape getRenderShape(BlockState pState){
+    return RenderShape.MODEL;
+  }
+
+  @Override
+  public boolean propagatesSkylightDown(BlockState pState, BlockGetter pReader, BlockPos pPos){
+    return true;
+  }
+
+  @Nullable
+  @Override
+  public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState){
+    return new NodeBE(pPos, pState);
+  }
+
 }

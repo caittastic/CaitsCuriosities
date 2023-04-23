@@ -35,10 +35,13 @@ public class ModEnUsLangProvider extends LanguageProvider{
 
     add("tuning_wand.attuned", "Attuned to node");
     add("tuning_wand.unattuned", "Deposited frequency of node");
+    add("tuning_wand.attunement_failed", "Node is already attuned to Brain");
+    add("tuning_wand.attunement_removed", "Removed nodes attunement");
+    add("tooltip.attuned", "Node position:");
     add(ModBlocks.NODE.get(), "Node");
     add(ModBlocks.BRAIN_JAR.get(), "Brain In A Jar");
     add(ModItems.TUNING_WAND.get(), "Tuning Wand");
-    add("tooltip.attuned", "Node position:");
+    add(ModItems.ROTTEN_BRAIN.get(), "Rotten Brain");
   }
 
   private void addTooltip(String key, String value){

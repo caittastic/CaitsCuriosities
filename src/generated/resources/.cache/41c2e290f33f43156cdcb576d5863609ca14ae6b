@@ -1,6 +1,5 @@
-// 1.19.2	2023-04-19T00:58:29.2170287	Item Models: caitsmod
+// 1.19.2	2023-04-23T02:09:02.2442163	Item Models: caitsmod
 424a1218da45bcb15dbaeea9f3693c791358497d assets/caitsmod/models/item/brain_jar.json
-0edd017a6f07fe6ee800aecbcc4b0380e07b3aee assets/caitsmod/models/item/hupwardser.json
 dd0253f07368cdc72bf53465c233ef84363a5533 assets/caitsmod/models/item/node.json
 40c994a50280ab04ceae5a3a7ac618e1a1fcd213 assets/caitsmod/models/item/overworld_card_1.json
 f1dd537ae57b005b93eba0466fa4fb2480b47ea9 assets/caitsmod/models/item/overworld_card_10.json
@@ -21,5 +20,6 @@ e8a1c4a79a28589a2523f5175990f5862643aed8 assets/caitsmod/models/item/overworld_c
 3755f28ab49364568108b82c856a16a121be38e6 assets/caitsmod/models/item/overworld_card_8.json
 f05740c679e2788d9d0d74d13f2a5c41feaeeb09 assets/caitsmod/models/item/overworld_card_9.json
 4078b8bb93e2236791ddc8a643c7de87f2767d8a assets/caitsmod/models/item/overworld_pack.json
+e1c49de347a83418e2e497b9bda666bfdb2dcaaa assets/caitsmod/models/item/rotten_brain.json
 ebeaa3922fa4ff3c20306f6f08010d70b4d26a8b assets/caitsmod/models/item/rubber_duck.json
 22626a9f4a7eebe8a0a67494f64a37a58083701a assets/caitsmod/models/item/tuning_wand.json

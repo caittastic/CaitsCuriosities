@@ -18,15 +18,14 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.items.IItemHandler;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
 public class BrainBE extends BlockEntity{
-  private ArrayList<BlockPos> nodePositions = new ArrayList<>();
+  private Set<BlockPos> nodePositions = new HashSet<>();
 
-  private ArrayList<Node> pullNodes = new ArrayList<>();
-  private ArrayList<Node> pushNodes = new ArrayList<>();
+  private Set<Node> pullNodes = new HashSet<>();
+  private Set<Node> pushNodes = new HashSet<>();
   private int cooldown;
 
   public BrainBE(BlockPos pPos, BlockState pBlockState){
@@ -34,8 +33,7 @@ public class BrainBE extends BlockEntity{
   }
 
   public static void tick(Level level, BlockPos blockPos, BlockState state, BrainBE e){
-    if(level.isClientSide)
-      return;
+    if(level.isClientSide) return;
 
     int maxDelay = 8;
     int movQty = 4;
@@ -49,39 +47,35 @@ public class BrainBE extends BlockEntity{
       e.pushNodes.clear();
 
       /* remove empty nodes from the node list, and build the pull and push node lists */
+      e.removeBlanks();
       //iterate for each node position
-      for(int i = 0; i < e.nodePositions.size(); i++){
-        BlockPos nodePos = e.nodePositions.get(i);
-        //if a position isnt a node, remove it. else add it to its matching list
+      for(BlockPos nodePos: e.nodePositions){
         BlockState nodeState = level.getBlockState(nodePos);
-        if(!nodeState.is(ModBlocks.NODE.get())){
-          e.nodePositions.remove(nodePos);
-        } else{
-          Direction interactDir = nodeState.getValue(NodeBlock.ATTACHED_FACE);
-          BlockEntity interactBE = level.getBlockEntity(nodePos.relative(interactDir.getOpposite()));
-          if(interactBE != null){
-            IItemHandler interactHandler = interactBE.getCapability(ForgeCapabilities.ITEM_HANDLER, interactDir).orElse(null);
-            if(interactHandler != null){
-              NodeType nodeType = nodeState.getValue(NodeBlock.TYPE);
-              if(nodeType == NodeType.PUSH){
-                e.pushNodes.add(new Node(nodePos, interactHandler));
-              } else if(nodeType == NodeType.PULL){
-                e.pullNodes.add(new Node(nodePos, interactHandler));
-              }
-            }
+        Direction interactDir = nodeState.getValue(NodeBlock.ATTACHED_FACE);
+        BlockEntity interactBE = level.getBlockEntity(nodePos.relative(interactDir.getOpposite()));
+        //if an itemHandler for a position exists, add it for its matching type list
+        if(interactBE != null){
+          IItemHandler interactHandler = interactBE.getCapability(ForgeCapabilities.ITEM_HANDLER, interactDir).orElse(null);
+          if(interactHandler != null){
+            NodeType nodeType = nodeState.getValue(NodeBlock.TYPE);
+            if(nodeType == NodeType.PUSH)
+              e.pushNodes.add(new Node(nodePos, interactHandler));
+            else
+              e.pullNodes.add(new Node(nodePos, interactHandler));
           }
         }
       }
 
       /* iterate through every pull handler, and try to insert into each push node */
-      boolean hasPushed = false;
-
-      //list of positions to spawn a movement poof
-      ArrayList<BlockPos> pullPoofPositions = new ArrayList<>();
-      ArrayList<BlockPos> pushPoofPositions = new ArrayList<>();
-
       //if the pull nodes list isn't empty and push nodes list isn't empty, do movement
       if(!e.pullNodes.isEmpty() && !e.pushNodes.isEmpty()){
+        //if the network has pushed on this attempt
+        boolean hasPushed = false;
+
+        //list of positions to spawn a movement poof
+        Set<BlockPos> pullPoofPositions = new HashSet<>();
+        Set<BlockPos> pushPoofPositions = new HashSet<>();
+
         //find all the itemHandlers that can be pulled from
         for(Node pullNode: e.pullNodes){
           boolean pulledFrom = false;
@@ -128,56 +122,40 @@ public class BrainBE extends BlockEntity{
               }
             }
           }
-          if(pulledFrom && !pullPoofPositions.isEmpty() && !pushPoofPositions.isEmpty())
-            spawnPoofs(level, pullPoofPositions, pushPoofPositions);
+          if(pulledFrom && !pullPoofPositions.isEmpty() && !pushPoofPositions.isEmpty()){
+            for(int i = 0; i < 5; ++i){
+              makePoofs((ServerLevel)level, pullPoofPositions);
+              makePoofs((ServerLevel)level, pushPoofPositions);
+            }
+          }
         }
       }
     }
   }
 
-  private static void spawnPoofs(Level level, ArrayList<BlockPos> pullPoofPositions, ArrayList<BlockPos> pushPoofPositions){
-    //remove duplicates from the poof lists
-    Set<BlockPos> pullSet = new HashSet<>(pullPoofPositions);
-    pullPoofPositions.clear();
-    pullPoofPositions.addAll(pullSet);
-
-    Set<BlockPos> pushSet = new HashSet<>(pushPoofPositions);
-    pushPoofPositions.clear();
-    pushPoofPositions.addAll(pushSet);
-    for(int i = 0; i < 5; ++i){
-      for(BlockPos poofPos: pullPoofPositions)
-        spawnPoof(level, poofPos);
-      for(BlockPos poofPos: pushPoofPositions)
-        spawnPoof(level, poofPos);
+  private static void makePoofs(ServerLevel level, Set<BlockPos> pullPoofPositions){
+    for(BlockPos poofPos: pullPoofPositions){
+      ServerLevel serverLevel = level;
+      serverLevel.sendParticles(
+              ModParticles.TELEPORT_POOF_PARTICLE.get(),
+              poofPos.getX() + 0.25 + (serverLevel.random.nextDouble() / 2),
+              poofPos.getY() + 0.5,
+              poofPos.getZ() + 0.25 + (serverLevel.random.nextDouble() / 2),
+              1,
+              0.0D,
+              0.0D,
+              0.0D,
+              0.0D);
     }
   }
 
-  private static void spawnPoof(Level level, BlockPos poofPos){
-    ServerLevel serverLevel = (ServerLevel)level;
-    serverLevel.sendParticles(
-            ModParticles.TELEPORT_POOF_PARTICLE.get(),
-            poofPos.getX() + 0.25 + (serverLevel.random.nextDouble() / 2),
-            poofPos.getY() + 0.5,
-            poofPos.getZ() + 0.25 + (serverLevel.random.nextDouble() / 2),
-            1,
-            0.0D,
-            0.0D,
-            0.0D,
-            0.0D);
-    //level.playSound(null, poofPos, SoundEvents.CHORUS_FRUIT_TELEPORT, SoundSource.BLOCKS, 0.01f, 1);
-  }
-
-  public ArrayList getNodePositions(){
+  public Set<BlockPos> getNodePositions(){
     removeBlanks();
     return this.nodePositions;
   }
 
   private void removeBlanks(){
-    //remove all positions that dont have a node block at them
-    for(int i = 0; i < this.nodePositions.size(); ++i){
-      if(!level.getBlockState(this.nodePositions.get(i)).is(ModBlocks.NODE.get()))
-        this.nodePositions.remove(i);
-    }
+    this.nodePositions.removeIf(pos -> !level.getBlockState(pos).is(ModBlocks.NODE.get()));
   }
 
   public void addPos(BlockPos pos){
@@ -188,10 +166,8 @@ public class BrainBE extends BlockEntity{
   protected void saveAdditional(CompoundTag nbt){
     super.saveAdditional(nbt);
     ListTag nodesTag = new ListTag();
-    for(int i = 0; i < this.nodePositions.size(); ++i){
-      BlockPos nodePos = this.nodePositions.get(i);
+    for(BlockPos nodePos: this.nodePositions)
       nodesTag.add(NbtUtils.writeBlockPos(nodePos));
-    }
     nbt.put("nodes", nodesTag);
     nbt.putInt("delay", cooldown);
   }
@@ -199,7 +175,7 @@ public class BrainBE extends BlockEntity{
   @Override
   public void load(CompoundTag nbt){
     super.load(nbt);
-    this.nodePositions = new ArrayList<>();
+    this.nodePositions = new HashSet<>();
     ListTag nodesTag = nbt.getList("nodes", 10);
     for(int i = 0; i < nodesTag.size(); ++i){
       CompoundTag posTag = nodesTag.getCompound(i);
