@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "E": {
+      "tag": "forge:eggs"
+    },
+    "F": {
+      "tag": "forge:feathers"
+    },
+    "H": {
+      "item": "minecraft:hay_block"
+    }
+  },
+  "pattern": [
+    "FEF",
+    " H "
+  ],
+  "result": {
+    "item": "caitsmod:rubber_duck"
+  }
+}

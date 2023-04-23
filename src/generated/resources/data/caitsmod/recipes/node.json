@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "e": {
+      "tag": "forge:ender_pearls"
+    },
+    "g": {
+      "tag": "forge:ingots/gold"
+    },
+    "w": {
+      "item": "minecraft:dark_oak_planks"
+    }
+  },
+  "pattern": [
+    "www",
+    "geg",
+    "www"
+  ],
+  "result": {
+    "count": 2,
+    "item": "caitsmod:node"
+  }
+}
