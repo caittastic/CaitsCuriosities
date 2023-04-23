@@ -74,6 +74,7 @@ public class BrainBE extends BlockEntity{
       }
 
       /* iterate through every pull handler, and try to insert into each push node */
+      boolean hasPushed = false;
 
       //list of positions to spawn a movement poof
       ArrayList<BlockPos> pullPoofPositions = new ArrayList<>();
@@ -85,36 +86,45 @@ public class BrainBE extends BlockEntity{
         for(Node pullNode: e.pullNodes){
           boolean pulledFrom = false;
           IItemHandler pullHandler = pullNode.connectedItemHandler;
-          IItemHandler pushHandler = e.pushNodes.get(0).connectedItemHandler;
           BlockPos pullPosition = pullNode.nodeBlockPosition;
-          BlockPos pushPosition = e.pushNodes.get(0).nodeBlockPosition;
 
           //for each slot in the pull itemHandler
           for(int pullSlot = pullHandler.getSlots() - 1; pullSlot >= 0; pullSlot--){
             if(pulledFrom) break; //if things have already been pulled this attempt, stop trying to pull
-            //for each slot in the push itemHandler
-            for(int pushSlot = 0; pushSlot < pushHandler.getSlots(); pushSlot++){
-              ItemStack pulledStack = pullHandler.extractItem(pullSlot, movQty, true); //simulate extracting the target pulling stack
-              ItemStack outputStack = pushHandler.getStackInSlot(pushSlot); //the stack things will be outputted to
+            //if havent successfully pushed this attempt
+            if(!hasPushed){
+              //for each push node
+              for(Node pushNode: e.pushNodes){
+                IItemHandler pushHandler = pushNode.connectedItemHandler;
+                BlockPos pushPosition = pushNode.nodeBlockPosition;
+                //if have successfulyl pushed, break
+                if(hasPushed) break;
+                //for each slot in the push itemHandler
+                for(int pushSlot = 0; pushSlot < pushHandler.getSlots(); pushSlot++){
+                  ItemStack pulledStack = pullHandler.extractItem(pullSlot, movQty, true); //simulate extracting the target pulling stack
+                  ItemStack outputStack = pushHandler.getStackInSlot(pushSlot); //the stack things will be outputted to
 
-              int outStackMaxSize = outputStack.getMaxStackSize(); //get the maximum stack size of the output stack
-              int outStackSize = outputStack.getCount(); //get the current stack size of the output stack
-              int outRemainingSize = outStackMaxSize - outStackSize; //get the remaining amount of items to fill up the output stack
+                  int outStackMaxSize = outputStack.getMaxStackSize(); //get the maximum stack size of the output stack
+                  int outStackSize = outputStack.getCount(); //get the current stack size of the output stack
+                  int outRemainingSize = outStackMaxSize - outStackSize; //get the remaining amount of items to fill up the output stack
 
-              boolean outSlotFull = outStackSize == outStackMaxSize; //if the output slot is full
-              boolean outAndPullMatch = pulledStack.getItem() == outputStack.getItem(); //if the output stack and the pulled stack are the same item
+                  boolean outSlotFull = outStackSize == outStackMaxSize; //if the output slot is full
+                  boolean outAndPullMatch = pulledStack.getItem() == outputStack.getItem(); //if the output stack and the pulled stack are the same item
 
-              //only try to move if the pulled stack can go into the output stack
-              if(!pulledStack.isEmpty() && (outputStack.isEmpty() || outAndPullMatch && !outSlotFull)){
-                int qtyToMove = Math.min(outRemainingSize, movQty); //the amount that should be pulled from the pull stack
-                pulledStack = pullHandler.extractItem(pullSlot, qtyToMove, false); //actually extract from the stack
+                  //only try to move if the pulled stack can go into the output stack
+                  if(!pulledStack.isEmpty() && (outputStack.isEmpty() || outAndPullMatch && !outSlotFull)){
+                    int qtyToMove = Math.min(outRemainingSize, movQty); //the amount that should be pulled from the pull stack
+                    pulledStack = pullHandler.extractItem(pullSlot, qtyToMove, false); //actually extract from the stack
 
-                ItemStack leftovers = pushHandler.insertItem(pushSlot, pulledStack.copy(), false); //insert into pull handler and get the leftover items
-                pulledStack.setCount(leftovers.getCount()); //set the pulled stack count to the amount of left over items
-                pulledFrom = true;
-                pullPoofPositions.add(pullPosition);
-                pushPoofPositions.add(pushPosition);
-                break;
+                    ItemStack leftovers = pushHandler.insertItem(pushSlot, pulledStack.copy(), false); //insert into pull handler and get the leftover items
+                    pulledStack.setCount(leftovers.getCount()); //set the pulled stack count to the amount of left over items
+                    pulledFrom = true;
+                    hasPushed = true;
+                    pullPoofPositions.add(pullPosition);
+                    pushPoofPositions.add(pushPosition);
+                    break;
+                  }
+                }
               }
             }
           }

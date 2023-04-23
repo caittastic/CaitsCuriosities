@@ -28,8 +28,6 @@ public class ModRecipes extends RecipeProvider{
             .unlockedBy("has_feahters", has(Tags.Items.FEATHERS))
             .save(consumer);
 
-
-
     ShapedRecipeBuilder.shaped(ModItems.DESTRUCTION_CATALYST.get(), 1)
             .pattern("tft")
             .pattern("non")

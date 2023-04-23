@@ -1,4 +1,6 @@
 {
+  "block.caitsmod.brain_jar": "Brain In A Jar",
+  "block.caitsmod.node": "Node",
   "block.caitsmod.rubber_duck": "Rubber Ducky",
   "card_shiny_indicator.caitsmod": "§5§o♢ ",
   "item.caitsmod.destruction_catalyst": "Destruction Catalyst",
@@ -21,7 +23,10 @@
   "item.caitsmod.overworld_card_8": "Porky",
   "item.caitsmod.overworld_card_9": "Zombo",
   "item.caitsmod.overworld_pack": "Card Pack",
+  "item.caitsmod.tuning_wand": "Tuning Wand",
   "itemGroup.curiositiesTab": "Cait's Curiosities",
+  "itemGroup.curiosities_tab": "Cait's Curiosities",
+  "tooltip.attuned": "Node position:",
   "tooltip.caitsmod.DestructionCatalyst": "Shift-use to charge, use to fire!",
   "tooltip.caitsmod.cart_count_3_tooltip": "§8§oContains 3 Cards",
   "tooltip.caitsmod.overworld_card_1": "§7§oa big bass fan",
@@ -43,5 +48,7 @@
   "tooltip.caitsmod.overworld_card_8": "§7§opiggy piggy hole",
   "tooltip.caitsmod.overworld_card_9": "§7§onot a fan of plants",
   "tooltip.caitsmod.overworld_card_set": "§8§oOverworld Card",
-  "tooltip.caitsmod.overworld_pack_tooltip": "§7§oOverworld Set Pack"
+  "tooltip.caitsmod.overworld_pack_tooltip": "§7§oOverworld Set Pack",
+  "tuning_wand.attuned": "Attuned to node",
+  "tuning_wand.unattuned": "Deposited frequency of node"
 }
