@@ -3,12 +3,12 @@ package caittastic.caitsmod.datagen;
 import caittastic.caitsmod.CaitsMod;
 import caittastic.caitsmod.datagen.models.ModItemModels;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.ExistingFileHelper;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 
-@Mod.EventBusSubscriber(modid = CaitsMod.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = CaitsMod.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGenerators{
   @SubscribeEvent
   public static void gatherData(GatherDataEvent event){
@@ -17,7 +17,7 @@ public class DataGenerators{
 
     /*     server     */
     boolean isIncludeServer = event.includeServer();
-    generator.addProvider(isIncludeServer, new ModRecipes(generator));
+    generator.addProvider(isIncludeServer, new ModRecipes(generator, event.getLookupProvider()));
 
     /*     client     */
     boolean isIncludeClient = event.includeClient();

@@ -1,12 +1,8 @@
-package caittastic.caitsmod.Item;
+package caittastic.caitsmod.items;
 
-import caittastic.caitsmod.CaitsMod;
 import net.minecraft.client.renderer.item.ItemProperties;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.BundleItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 
 public class ModItemProperties{
   public static void addCustomItemProperties(){
@@ -15,7 +11,7 @@ public class ModItemProperties{
 
   private static void makeCatalyst(Item item){
     ItemProperties.register(ModItems.DESTRUCTION_CATALYST.get(), new ResourceLocation("charge"), (itemStack, clientLevel, livingEntity, i) -> {
-      return DestructionCatalyst.getCharge(itemStack);
+      return DestructionCatalystItem.getCharge(itemStack);
     });
   }
 }

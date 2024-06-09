@@ -1,57 +1,41 @@
 package caittastic.caitsmod;
 
-import caittastic.caitsmod.Block.ModBlocks;
-import caittastic.caitsmod.BlockEntity.ModBlockEntities;
-import caittastic.caitsmod.Item.ModItemProperties;
-import caittastic.caitsmod.Item.ModItems;
+import caittastic.caitsmod.blocks.ModBlocks;
+import caittastic.caitsmod.blockentities.ModBlockEntities;
+import caittastic.caitsmod.data.ModDataComponents;
+import caittastic.caitsmod.items.ModCreativeTabs;
+import caittastic.caitsmod.items.ModItemProperties;
+import caittastic.caitsmod.items.ModItems;
 import caittastic.caitsmod.loot.AddLootModifiers;
-import caittastic.caitsmod.networking.ModPackets;
 import caittastic.caitsmod.particles.ModParticles;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForge;
 
-// The value here should match an entry in the META-INF/mods.toml file
+// The value here should match an entry in the META-INF/neoforge.mods.toml file
 @Mod(CaitsMod.MOD_ID)
-public class CaitsMod{
-  //the ID of our mod, in a form that can be accessed anywhere
-  public static final String MOD_ID = "caitsmod";
-  /* -------------------------------- registering tabs -------------------------------- */
-  public static final CreativeModeTab CURIOSITIES_TAB = new CreativeModeTab("curiosities_tab"){
-    @Override
-    public @NotNull
-    ItemStack makeIcon(){return new ItemStack(ModBlocks.RUBBER_DUCK.get());}
-  };
+public class CaitsMod {
+    //the ID of our mod, in a form that can be accessed anywhere
+    public static final String MOD_ID = "caitsmod";
 
-  public CaitsMod(){
-    //registers items
-    IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public CaitsMod(IEventBus modEventBus, ModContainer container) {
+        ModItems.ITEMS.register(modEventBus);
+        ModBlocks.BLOCKS.register(modEventBus);
+        ModBlockEntities.BLOCK_ENTITIES.register(modEventBus);
+        ModSoundEvents.SOUND_EVENTS.register(modEventBus);
+        ModParticles.PARTICLE_TYPES.register(modEventBus);
+        AddLootModifiers.LOOT_MODIFIER_SERIALIZERS.register(modEventBus);
+        ModDataComponents.COMPONENTS.register(modEventBus);
+        ModCreativeTabs.CREATIVE_TABS.register(modEventBus);
 
-    ModItems.ITEMS.register(bus);
-    ModBlocks.BLOCKS.register(bus);
-    ModBlockEntities.BLOCK_ENTITIES.register(bus);
-    ModSoundEvents.SOUND_EVENTS.register(bus);
-    ModParticles.PARTICLE_TYPES.register(bus);
-    AddLootModifiers.LOOT_MODIFIER_SERIALIZERS.register(bus);
+        modEventBus.addListener(this::clientSetup);
+    }
 
-    MinecraftForge.EVENT_BUS.register(this);
-
-    bus.addListener(this::setup);
-    bus.addListener(this::clientSetup);
-  }
-
-  private void clientSetup(final FMLClientSetupEvent event){
-    ModItemProperties.addCustomItemProperties();
-  }
-
-  private void setup(final FMLCommonSetupEvent event){
-    event.enqueueWork(ModPackets::register);
-  }
+    private void clientSetup(final FMLClientSetupEvent event) {
+        ModItemProperties.addCustomItemProperties();
+    }
 
 }

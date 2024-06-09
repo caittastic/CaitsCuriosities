@@ -1,19 +1,19 @@
-package caittastic.caitsmod.Block;
+package caittastic.caitsmod.blocks;
 
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum NodeType implements StringRepresentable{
   PULL("pull"),
   PUSH("push");
 
-  public static final NodeType[] BY_ID = values();
   private final String name;
 
   NodeType(String pName){
     this.name = pName;
   }
 
-  public String getSerializedName(){
+  public @NotNull String getSerializedName(){
     return this.name;
   }
 }

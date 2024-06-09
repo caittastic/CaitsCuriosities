@@ -1,14 +1,14 @@
 package caittastic.caitsmod.datagen;
 
-import caittastic.caitsmod.Block.ModBlocks;
+import caittastic.caitsmod.blocks.ModBlocks;
 import caittastic.caitsmod.CaitsMod;
-import caittastic.caitsmod.Item.ModItems;
+import caittastic.caitsmod.items.ModItems;
 import net.minecraft.data.DataGenerator;
-import net.minecraftforge.common.data.LanguageProvider;
+import net.neoforged.neoforge.common.data.LanguageProvider;
 
-public class ModEnUsLangProvider extends LanguageProvider{
+public class ModEnUsLangProvider extends LanguageProvider {
   public ModEnUsLangProvider(DataGenerator gen, String locale){
-    super(gen, CaitsMod.MOD_ID, locale);
+    super(gen.getPackOutput(), CaitsMod.MOD_ID, locale);
   }
 
   @Override
@@ -16,10 +16,10 @@ public class ModEnUsLangProvider extends LanguageProvider{
     add(ModItems.OVERWORLD_PACK.get(), "Card Pack");
     add(ModItems.DESTRUCTION_CATALYST.get(), "Destruction Catalyst");
     add(ModBlocks.RUBBER_DUCK.get(), "Rubber Ducky");
-    for(int i = 0; i < ModItems.overworldCards.length; i++){
+    for(int i = 0; i < ModItems.OVERWORLD_CARDS.length; i++){
       int cardNumber = i + 1;
-      add(ModItems.OVERWORLD_MAP.get(cardNumber).get(), ModItems.overworldCards[i][0]);
-      add("tooltip." + CaitsMod.MOD_ID + ".overworld_card_" + cardNumber, "§7§o" + ModItems.overworldCards[i][1]);
+      add(ModItems.OVERWORLD_MAP.get(cardNumber).get(), ModItems.OVERWORLD_CARDS[i][0]);
+      add("tooltip." + CaitsMod.MOD_ID + ".overworld_card_" + cardNumber, "§7§o" + ModItems.OVERWORLD_CARDS[i][1]);
     }
 
     add("itemGroup.curiositiesTab", "Cait's Curiosities");
