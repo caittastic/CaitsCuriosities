@@ -56,13 +56,6 @@ dependencies {
     implementation "net.neoforged:neoforge:${neo_version}"
 }
 
-subsystems {
-    parchment {
-        minecraftVersion=minecraft_version
-        mappingsVersion=mappings_version
-    }
-}
-
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version      : minecraft_version,

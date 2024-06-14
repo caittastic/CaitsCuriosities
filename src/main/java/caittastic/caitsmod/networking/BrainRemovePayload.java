@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 
 // Server to client
 public record BrainRemovePayload(BlockPos blockPos) implements CustomPacketPayload {
-  public static final Type<BrainRemovePayload> TYPE = new Type<>(new ResourceLocation(CaitsMod.MOD_ID, "brain_remove_payload"));
+  public static final Type<BrainRemovePayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(CaitsMod.MOD_ID, "brain_remove_payload"));
   public static final StreamCodec<RegistryFriendlyByteBuf, BrainRemovePayload> STREAM_CODEC = StreamCodec.composite(
           BlockPos.STREAM_CODEC,
           BrainRemovePayload::blockPos,

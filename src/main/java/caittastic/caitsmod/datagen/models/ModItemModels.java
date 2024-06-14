@@ -29,19 +29,19 @@ public class ModItemModels extends ItemModelProvider {
 
     for(int i = 1; i <= ModItems.OVERWORLD_CARDS.length; i++){
       DeferredItem<?> item = ModItems.OVERWORLD_MAP.get(i);
-      ResourceLocation back = new ResourceLocation(CaitsMod.MOD_ID,
+      ResourceLocation back = ResourceLocation.fromNamespaceAndPath(CaitsMod.MOD_ID,
               "item/overworld_set/" + "overworld_card_back");
-      ResourceLocation resourceLocation = new ResourceLocation(CaitsMod.MOD_ID,
+      ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(CaitsMod.MOD_ID,
               "item/overworld_set/" + item.getId().getPath());
       singleTexture(
               item.getId().getPath(),
-              new ResourceLocation(CaitsMod.MOD_ID, "item/card"),
+              ResourceLocation.fromNamespaceAndPath(CaitsMod.MOD_ID, "item/card"),
               "front", resourceLocation).texture("back", back);
     }
   }
 
   private void registerFlatItemModel(DeferredItem<?> item){
-    ResourceLocation resourceLocation = new ResourceLocation(
+    ResourceLocation resourceLocation = ResourceLocation.fromNamespaceAndPath(
             CaitsMod.MOD_ID,
             "item/" + item.getId().getPath());
     singleTexture(

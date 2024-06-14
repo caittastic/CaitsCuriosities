@@ -17,6 +17,6 @@ public class ModSoundEvents{
   public static final Supplier<SoundEvent> POOF = registerSoundEvent("poof");
 
   private static Supplier<SoundEvent> registerSoundEvent(String name){
-    return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(new ResourceLocation(MOD_ID, name)));
+    return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(MOD_ID, name)));
   }
 }
