@@ -1,21 +1,28 @@
 package caittastic.caitsmod.datagen.loot;
 
-import caittastic.caitsmod.Block.ModBlocks;
-import net.minecraft.data.loot.BlockLoot;
+import caittastic.caitsmod.blocks.ModBlocks;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.loot.BlockLootSubProvider;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.registries.RegistryObject;
+import org.jetbrains.annotations.NotNull;
 
-public class ModBlockLootTables extends BlockLoot{
-  @Override
-  protected void addTables(){
-    simpleDropSelf(ModBlocks.RUBBER_DUCK);
-  }
+import java.util.Set;
 
-  private void simpleDropSelf(RegistryObject<Block> self){this.dropSelf(self.get());}
+public class ModBlockLootTables extends BlockLootSubProvider {
+    protected ModBlockLootTables(HolderLookup.Provider provider) {
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), provider);
+    }
 
-  @Override
-  protected Iterable<Block> getKnownBlocks(){
-    return ModBlocks.BLOCKS.getEntries().stream().map(RegistryObject::get)::iterator;
-  }
+    @Override
+    protected void generate() {
+        this.dropSelf(ModBlocks.RUBBER_DUCK.get());
+    }
+
+    @Override
+    protected @NotNull Iterable<Block> getKnownBlocks() {
+        return ModBlocks.BLOCKS.getEntries().stream().map(block -> (Block) block.get())::iterator;
+    }
+
 }
 
