@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "E": {
+      "tag": "c:eggs"
+    },
+    "F": {
+      "tag": "c:feathers"
+    },
+    "H": {
+      "item": "minecraft:hay_block"
+    }
+  },
+  "pattern": [
+    "FEF",
+    " H "
+  ],
+  "result": {
+    "count": 1,
+    "id": "gizmos:rubber_duck"
+  }
+}
