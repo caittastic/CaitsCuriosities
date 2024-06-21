@@ -1,6 +1,0 @@
-{
-  "parent": "item/generated",
-  "textures": {
-    "layer0": "caitsmod:item/destruction_catalyst_charge_4"
-  }
-}

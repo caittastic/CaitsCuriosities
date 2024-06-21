@@ -1,0 +1,57 @@
+{
+  "variants": {
+    "attached_face=up,type=pull": {
+      "model": "gizmos:block/pull_node"
+    },
+    "attached_face=down,type=pull": {
+      "model": "gizmos:block/pull_node",
+      "x": 180
+    },
+    "attached_face=north,type=pull": {
+      "model": "gizmos:block/pull_node",
+      "x": 90
+    },
+    "attached_face=south,type=pull": {
+      "model": "gizmos:block/pull_node",
+      "x": 90,
+      "y": 180
+    },
+    "attached_face=east,type=pull": {
+      "model": "gizmos:block/pull_node",
+      "x": 90,
+      "y": 90
+    },
+    "attached_face=west,type=pull": {
+      "model": "gizmos:block/pull_node",
+      "x": 90,
+      "y": 270
+    },
+
+    "attached_face=up,type=push": {
+      "model": "gizmos:block/push_node"
+    },
+    "attached_face=down,type=push": {
+      "model": "gizmos:block/push_node",
+      "x": 180
+    },
+    "attached_face=north,type=push": {
+      "model": "gizmos:block/push_node",
+      "x": 90
+    },
+    "attached_face=south,type=push": {
+      "model": "gizmos:block/push_node",
+      "x": 90,
+      "y": 180
+    },
+    "attached_face=east,type=push": {
+      "model": "gizmos:block/push_node",
+      "x": 90,
+      "y": 90
+    },
+    "attached_face=west,type=push": {
+      "model": "gizmos:block/push_node",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

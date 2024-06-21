@@ -1,0 +1,32 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "gizmos:item/destruction_catalyst_charge_3"
+  },
+  "overrides": [
+    {
+      "predicate": {
+        "charge": 1
+      },
+      "model": "gizmos:item/catalyst_charge_1"
+    },
+    {
+      "predicate": {
+        "charge": 4
+      },
+      "model": "gizmos:item/catalyst_charge_2"
+    },
+    {
+      "predicate": {
+        "charge": 9
+      },
+      "model": "gizmos:item/catalyst_charge_3"
+    },
+    {
+      "predicate": {
+        "charge": 16
+      },
+      "model": "gizmos:item/catalyst_charge_4"
+    }
+  ]
+}

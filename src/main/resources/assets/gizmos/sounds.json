@@ -1,0 +1,30 @@
+{
+  "destruction_catalyst_use": {
+    "category": "items",
+    "subtitle": "gizmos.destruction_catalyst_use",
+    "sounds": [
+      "gizmos:destruction_catalyst_use"
+    ]
+  },
+  "item_charge": {
+    "category": "items",
+    "subtitle": "gizmos.item_charge",
+    "sounds": [
+      "gizmos:item_charge"
+    ]
+  },
+  "item_tune": {
+    "category": "items",
+    "subtitle": "gizmos.item_tune",
+    "sounds": [
+      "gizmos:item_tune"
+    ]
+  },
+  "poof": {
+    "category": "items",
+    "subtitle": "gizmos.poof",
+    "sounds": [
+      "gizmos:poof"
+    ]
+  }
+}

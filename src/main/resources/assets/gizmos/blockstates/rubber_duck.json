@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "gizmos:block/rubber_duck",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "gizmos:block/rubber_duck"
+    },
+    "facing=south": {
+      "model": "gizmos:block/rubber_duck",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "gizmos:block/rubber_duck",
+      "y": 270
+    }
+  }
+}

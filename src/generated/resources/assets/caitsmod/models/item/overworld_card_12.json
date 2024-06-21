@@ -1,7 +1,0 @@
-{
-  "parent": "caitsmod:item/card",
-  "textures": {
-    "back": "caitsmod:item/overworld_set/overworld_card_back",
-    "front": "caitsmod:item/overworld_set/overworld_card_12"
-  }
-}
