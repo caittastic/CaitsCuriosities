@@ -1,5 +1,6 @@
 package strelka.gizmos;
 
+import net.minecraft.SharedConstants;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
@@ -41,4 +42,7 @@ public class Gizmos{
         ModItemProperties.addCustomItemProperties();
     }
 
+    public static boolean enableExperimentalFeatures() {
+        return SharedConstants.IS_RUNNING_IN_IDE;
+    }
 }

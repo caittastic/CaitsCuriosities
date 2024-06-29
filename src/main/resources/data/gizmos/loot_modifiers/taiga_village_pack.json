@@ -2,7 +2,7 @@
   "type": "gizmos:loot_table_inject",
   "conditions": [
     {
-      "condition": "forge:loot_table_id",
+      "condition": "neoforge:loot_table_id",
       "loot_table_id": "minecraft:chests/village/village_taiga_house"
     }
   ],

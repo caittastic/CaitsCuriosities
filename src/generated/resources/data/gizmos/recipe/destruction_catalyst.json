@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "f": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "n": {
+      "tag": "c:ingots/netherite"
+    },
+    "o": {
+      "tag": "c:obsidians"
+    },
+    "t": {
+      "item": "minecraft:tnt"
+    }
+  },
+  "pattern": [
+    "tft",
+    "non",
+    "t t"
+  ],
+  "result": {
+    "count": 1,
+    "id": "gizmos:destruction_catalyst"
+  }
+}

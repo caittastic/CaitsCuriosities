@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class NodeBE extends BlockEntity {
-    BlockPos brainPos;
+    private BlockPos brainPos;
 
     public NodeBE(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.NODE.get(), pPos, pBlockState);
@@ -18,9 +18,7 @@ public class NodeBE extends BlockEntity {
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
         if (this.hasLinkedBrain()) {
-            pTag.putInt("brain_x", this.brainPos.getX());
-            pTag.putInt("brain_y", this.brainPos.getY());
-            pTag.putInt("brain_z", this.brainPos.getZ());
+            pTag.putLong("brain_pos", this.brainPos.asLong());
         }
     }
 
@@ -28,7 +26,7 @@ public class NodeBE extends BlockEntity {
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
         if (this.hasLinkedBrain())
-            this.brainPos = new BlockPos(pTag.getInt("brain_x"), pTag.getInt("brain_y"), pTag.getInt("brain_z"));
+            this.brainPos = BlockPos.of(pTag.getLong("brain_pos"));
     }
 
     public boolean hasLinkedBrain() {

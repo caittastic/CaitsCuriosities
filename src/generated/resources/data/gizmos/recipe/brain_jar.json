@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": {
+      "item": "minecraft:amethyst_block"
+    },
+    "b": {
+      "item": "gizmos:rotten_brain"
+    },
+    "g": {
+      "tag": "c:glass_blocks"
+    },
+    "s": {
+      "tag": "minecraft:wooden_slabs"
+    }
+  },
+  "pattern": [
+    "sss",
+    "gbg",
+    "gag"
+  ],
+  "result": {
+    "count": 1,
+    "id": "gizmos:brain_jar"
+  }
+}
