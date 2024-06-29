@@ -1,0 +1,7 @@
+{
+  "parent": "gizmos:item/card",
+  "textures": {
+    "back": "gizmos:item/overworld_set/overworld_card_back",
+    "front": "gizmos:item/overworld_set/overworld_card_4"
+  }
+}
